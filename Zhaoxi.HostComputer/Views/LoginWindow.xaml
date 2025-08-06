@@ -1,0 +1,224 @@
+﻿<Window x:Class="Zhaoxi.HostComputer.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Zhaoxi.HostComputer.Views"
+        xmlns:vm="clr-namespace:Zhaoxi.HostComputer.ViewModels"
+        xmlns:base="clr-namespace:Zhaoxi.HostComputer.Base"
+        mc:Ignorable="d"
+        Background="Transparent" FontFamily="Microsoft YaHei" FontWeight="ExtraLight" ResizeMode="NoResize"
+        WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        Title="LoginWindow">
+    <Window.Resources>
+        <!--#region 关闭按钮的模板和触发器 -->
+        <!--关闭按钮的模板-->
+        <ControlTemplate TargetType="Button" x:Key="CloseButtonTemplate">
+            <Grid Background="Transparent" Name="back">
+                <TextBlock Text="&#xe653;" 
+                           FontFamily="{DynamicResource iconfont}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontSize="14"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#DDD" TargetName="back"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <!--#endregion-->
+
+        <!--#region 用户名输入列的模板和属性的绑定 -->
+        <Style TargetType="TextBox" x:Key="UsernameTextBoxStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    Background="{TemplateBinding Background}" 
+                                    SnapsToDevicePixels="True"
+                                    CornerRadius="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="#DDD" BorderThickness="0,0,1,0" Margin="0,8,5,8"/><!-- 中间的横线-->
+                                <TextBlock Text="请输入用户名" Grid.Column="1" VerticalAlignment="Center" Foreground="#BBB"
+                               Name="markText" Visibility="Collapsed" FontSize="12" Margin="2,0"/><!--输入文本框内的占位符，默认隐藏-->
+                                <TextBlock Text="&#xe610;"
+                                           FontFamily="{DynamicResource iconfont}" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           Foreground="#DDD"/><!--用户图标-->
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false"
+                                                  HorizontalScrollBarVisibility="Hidden" 
+                                                  VerticalScrollBarVisibility="Hidden"
+                                                  Grid.Column="1"
+                                                  VerticalAlignment="Center" MinHeight="20"/><!--就算文本超框也不显示下划线-->
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5"/>
+                            </Trigger>
+                            <!--当文本框的Text属性为空时触发-->
+                            <DataTrigger Binding="{Binding Path=Text,RelativeSource={RelativeSource Mode=Self}}" Value="">
+                                <Setter Property="Visibility" TargetName="markText" Value="Visible"/><!--显示占位符-->
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--#endregion-->
+
+        <!--#region 密码列的模板和属性的绑定 -->
+        <Style x:Key="PasswordBoxStyle" TargetType="{x:Type PasswordBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type PasswordBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    Background="{TemplateBinding Background}" 
+                                    SnapsToDevicePixels="True"
+                                    CornerRadius="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderBrush="#DDD" BorderThickness="0,0,1,0" Margin="0,8,5,8"/>
+                                <TextBlock Text="请输入密码" Grid.Column="1" VerticalAlignment="Center" Foreground="#BBB"
+                                           Name="markText" Visibility="Collapsed" FontSize="12" Margin="2,0"/>
+                                <TextBlock Text="&#xe602;" FontFamily="{StaticResource iconfont}" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Foreground="#DDD"/><!--图标-->
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false"
+                                                  HorizontalScrollBarVisibility="Hidden" 
+                                                  VerticalScrollBarVisibility="Hidden"
+                                                  Grid.Column="1"
+                                                  VerticalAlignment="Center" MinHeight="20"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5"/>
+                            </Trigger>
+                            <!--当用户模板中的密码属性为空时触发-->
+                            <DataTrigger Binding="{Binding Path=UserModel.Password}" Value="">
+                                <Setter Property="Visibility" TargetName="markText" Value="Visible"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--#endregion-->
+
+    </Window.Resources>
+
+    <!--#region 图片从左边缓慢出来的动画 -->
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Duration="0:0:0.5" To="0" 
+                                     Storyboard.TargetName="tt"
+                                     Storyboard.TargetProperty="X"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <!--#endregion-->
+
+    <Grid Width="740" Margin="5" Background="Transparent" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <Border Background="#F7F9FA" Margin="0,6" HorizontalAlignment="Right" Width="330" BorderBrush="#DDD" BorderThickness="0"
+                CornerRadius="0,5,5,0">
+            <!--图片的阴影-->
+            <Border.Effect>
+                <DropShadowEffect Color="Black" ShadowDepth="0" Direction="0" BlurRadius="10" Opacity="0.2"/>
+            </Border.Effect>
+            <!--图片动画使用的属性-->
+            <Border.RenderTransform>
+                <TranslateTransform X="-350" x:Name="tt"/>
+            </Border.RenderTransform>
+            <Grid HorizontalAlignment="Right" Width="230" Margin="30,30,30,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="auto" MinHeight="40"/>
+                </Grid.RowDefinitions>
+                <StackPanel VerticalAlignment="Center" Margin="0,0,0,30">
+                    <TextBlock Text="朝夕智控" Foreground="#333" FontSize="22"/>
+                    <TextBlock Text="专注于提升工业智能管理协作平台" FontSize="12" Foreground="#888" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <TextBox Grid.Row="1" Height="35" Margin="0,8" Style="{StaticResource UsernameTextBoxStyle}"
+                         VerticalContentAlignment="Center" FontSize="14"
+                         Text="{Binding UserModel.UserName,UpdateSourceTrigger=PropertyChanged}"/>
+                <PasswordBox Grid.Row="2" Height="35" Margin="0,8" Style="{StaticResource PasswordBoxStyle}"
+                             base:PasswordBoxHelper.Attach="true"
+                             base:PasswordBoxHelper.Password="{Binding UserModel.Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="14"/>
+                <CheckBox Grid.Row="3" Content="记住登录信息" VerticalAlignment="Center" FontSize="10" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Hyperlink>忘记密码</Hyperlink>
+                </TextBlock>
+
+                <!--CommandParameter="{Binding Path=.,RelativeSource={RelativeSource AncestorType=Window}将window作为传递的对象，用于设置窗口DialogResult = true-->
+                <Button Content="登    录" Background="#FF104991" Foreground="White" Grid.Row="4" Height="30" Margin="0,8" BorderThickness="0" VerticalAlignment="Top"
+                        Command="{Binding LoginCommand}" CommandParameter="{Binding Path=.,RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="X" Margin="0,-30,-25,0"
+                        Template="{StaticResource CloseButtonTemplate}" Width="40" Height="30"
+                        Command="{Binding CloseCommand}" CommandParameter="{Binding Path=.,RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+                <TextBlock Text="{Binding ErrorMsg}" Foreground="Red" TextWrapping="Wrap" Grid.Row="10"
+                           TextAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!--图片的放入-->
+        <Polygon Points="0 0,420,0,450 200 420 400 0 400" StrokeThickness="0" Stroke="White" HorizontalAlignment="Left">
+            <Polygon.Fill>
+                <ImageBrush ImageSource="pack://application:,,,/Zhaoxi.HostComputer;component/Assets/Images/login_image.jpg" Stretch="UniformToFill" Viewbox="0,0,1.4,1">
+                    
+                </ImageBrush>
+            </Polygon.Fill>
+            <Polygon.Effect>
+                <DropShadowEffect Color="Black" ShadowDepth="0" Direction="0" BlurRadius="10" Opacity="0.3"/>
+            </Polygon.Effect>
+        </Polygon>
+        <Polygon Points="0 0,420,0,450 200 420 400 0 400" Opacity="0.2" StrokeThickness="0" Stroke="White" HorizontalAlignment="Left">
+            <Polygon.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#22FFFFFF" Offset="0"/>
+                    <GradientStop Color="#FF1B283C" Offset="1"/>
+                    <GradientStop Color="#C6555F6E" Offset="0.617"/>
+                </RadialGradientBrush>
+            </Polygon.Fill>
+        </Polygon>
+    </Grid>
+</Window>
