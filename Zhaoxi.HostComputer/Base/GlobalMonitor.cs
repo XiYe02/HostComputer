@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,12 +12,13 @@ namespace Zhaoxi.HostComputer.Base
 
     public class GlobalMonitor
     {
-
-
         public static ObservableCollection<DeviceModel> DeviceList { get; set; } = new ObservableCollection<DeviceModel>();
 
         static bool isRunning = true;
         static Task mainTask = null;
+        
+        // 为每个设备维护一个通信帮助类实例（使用设备名称作为键）
+        static Dictionary<string, S7ComunicationHelper> s7Helpers = new Dictionary<string, S7ComunicationHelper>();
 
         public static void Start()
         {
@@ -38,29 +39,74 @@ namespace Zhaoxi.HostComputer.Base
                     }
                 //DeviceList = new ObservableCollection<DeviceModel>(list);
 
-                //通过S7Net库读取plc的数据
+                // 为每个S7设备创建并连接通信帮助类
+                foreach (var item in DeviceList)
+                {
+                    if (item.CommType == 2 && item.S7 != null) // S7通信
+                    {
+                        try
+                        {
+                            var helper = new S7ComunicationHelper(item.S7);
+                            if (helper.Connect())
+                            {
+                                s7Helpers[item.Name] = helper; // 使用设备名称作为键
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"设备 {item.Name} 连接失败: {ex.Message}");
+                        }
+                    }
+                }
+
+                // 通过S7ComunicationHelper读取plc的数据
                 while (isRunning)
                 {
                     await Task.Delay(100);
 
                     foreach (var item in DeviceList)
                     {
-                        if (item.CommType == 2 && item.S7 != null)// S7通信，使用了通信库
+                        if (item.CommType == 2 && item.S7 != null && s7Helpers.ContainsKey(item.Name))
                         {
-                            Zhaoxi.Communication.Siemens.S7Net s7Net = new Communication.Siemens.S7Net(item.S7.IP, item.S7.Port, (byte)item.S7.Rock, (byte)item.S7.Slot);
+                            var helper = s7Helpers[item.Name];
 
-                            //整理存储区地址
-                            List<string> addrList = item.MonitorValueList.Select(v => v.Address).ToList();
-                            var result = s7Net.Read<ushort>(addrList);
-                            if (result.IsSuccessed)
+                            try
                             {
-                                for (int i = 0; i < item.MonitorValueList.Count; i++)
+                                // 检查连接状态
+                                if (!helper.IsConnected)
                                 {
-                                    item.MonitorValueList[i].Value = result.Datas[i];//获取读取的数据
+                                    // 尝试重新连接
+                                    if (!helper.Reconnect())
+                                    {
+                                        continue;
+                                    }
+                                }
+
+                                // 整理存储区地址
+                                List<string> addrList = item.MonitorValueList.Select(v => v.Address).ToList();
+                                
+                                if (addrList.Count > 0)
+                                {
+                                    // 使用帮助类读取多个ushort地址
+                                    var result = helper.ReadMultipleUShort(addrList);
+                                    
+                                    if (result.Success)
+                                    {
+                                        for (int i = 0; i < item.MonitorValueList.Count; i++)
+                                        {
+                                            item.MonitorValueList[i].Value = result.Values[i]; // 获取读取的数据
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"设备 {item.Name} 读取失败: {result.ErrorMessage}");
+                                    }
                                 }
                             }
-
-                            s7Net.Close();
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"设备 {item.Name} 读取异常: {ex.Message}");
+                            }
                         }
                     }
                 }
@@ -70,9 +116,23 @@ namespace Zhaoxi.HostComputer.Base
         public static void Stop()
         {
             isRunning = false;
-            mainTask.ConfigureAwait(true);
-        } 
-
+            
+            // 释放所有通信帮助类资源
+            foreach (var helper in s7Helpers.Values)
+            {
+                try
+                {
+                    helper?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"释放连接失败: {ex.Message}");
+                }
+            }
+            
+            s7Helpers.Clear();
+            mainTask?.ConfigureAwait(true);
+        }
     } 
 
 }

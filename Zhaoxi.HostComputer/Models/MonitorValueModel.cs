@@ -24,5 +24,17 @@ namespace Zhaoxi.HostComputer.Models
             set { _value = value; this.NotifyChanged(); }
         }
 
+        public string UnitData
+        {
+            get
+            {
+                return Unit;
+            }
+            set
+            {
+                Unit = value;
+                this.NotifyChanged();
+            }
+        }
     }
 }

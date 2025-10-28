@@ -13,7 +13,7 @@ namespace Zhaoxi.HostComputer.ViewModels
     {
         public MainModel MainModel { get; set; } = new MainModel();
 
-
+       
         private CommandBase _closeCommand;
 
         public CommandBase CloseCommand
@@ -68,6 +68,8 @@ namespace Zhaoxi.HostComputer.ViewModels
         /// </summary>
         public MainViewModel()
         {
+            GlobalMonitor.Start();
+
             this.NavPage("Zhaoxi.HostComputer.Views.MonitorView");
 
             Task.Run(async () =>

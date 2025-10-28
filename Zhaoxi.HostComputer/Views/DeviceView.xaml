@@ -213,15 +213,15 @@
                         <TextBlock VerticalAlignment="Center">
                             <Run Text="P：" Foreground="#888"/>
                             <!--通过S7过去plc里的值-->
-                            <Run Text="{Binding MonitorValueList[0].Value,StringFormat=\{0\}kW}" FontWeight="Bold"/>
+                            <Run Text="{Binding MonitorValueList[0].Value,StringFormat=\{0\}V}" FontWeight="Bold"/>
                         </TextBlock>
                         <TextBlock VerticalAlignment="Center" Grid.Column="1">
                             <Run Text="Va：" Foreground="#888"/>
-                            <Run Text="668,126.2kV" FontWeight="Bold"/>
+                            <Run Text="{Binding MonitorValueList[2].Value,StringFormat=\{0\}℃}" FontWeight="Bold"/>
                         </TextBlock>
                         <TextBlock VerticalAlignment="Center" Grid.Column="2">
                             <Run Text="La：" Foreground="#888"/>
-                            <Run Text="188A" FontWeight="Bold"/>
+                            <Run Text="{Binding MonitorValueList[1].Value,StringFormat=\{0\}A}" FontWeight="Bold"/>
                         </TextBlock>
                         <TextBlock VerticalAlignment="Center" Grid.Row="1">
                             <Run Text="Q：" Foreground="#888"/>
@@ -257,7 +257,7 @@
                         </TextBlock>
                         <TextBlock VerticalAlignment="Center" Grid.Row="3" Grid.Column="2">
                             <Run Text="Lc：" Foreground="#888"/>
-                            <Run Text="956A" FontWeight="Bold"/>
+                            <Run Text="956A" FontWeight="Bold"/>da
                         </TextBlock>
                     </Grid>
                 </Grid>
@@ -610,15 +610,15 @@
                                                         <TextBlock Text="正在运行" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Foreground="#333" FontSize="11"/>
                                                         <TextBlock>
                                             <Run Text="电压："/>
-                                            <Run Text="220V"/>
+                                            <Run Text="{Binding MonitorValueList[0].Value,StringFormat=\{0\}V}"/>
                                                         </TextBlock>
                                                         <TextBlock>
                                             <Run Text="电流："/>
-                                            <Run Text="220A"/>
+                                            <Run Text="{Binding MonitorValueList[2].Value,StringFormat=\{0\}A}"/>
                                                         </TextBlock>
                                                         <TextBlock>
                                             <Run Text="温度："/>
-                                            <Run Text="220℃"/>
+                                            <Run Text="{Binding MonitorValueList[1].Value,StringFormat=\{0\}℃}"/>
                                                         </TextBlock>
                                                         <Border/>
                                                         <TextBlock Text="流量：220"/>
