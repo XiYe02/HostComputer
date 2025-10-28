@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -21,6 +21,7 @@ namespace Zhaoxi.HostComputer.Service
             foreach (var item in d_info.AsEnumerable())
             {
                 DeviceModel deviceModel = new DeviceModel();
+                deviceModel.DeviceId = item.Field<string>("d_id");
                 deviceModel.Name = item.Field<string>("d_name");
                 deviceModel.SN = item.Field<string>("d_sn");
                 deviceModel.CommType = (int)item.Field<Int32>("comm_type");

@@ -49,12 +49,12 @@ namespace Zhaoxi.HostComputer.Base
                             var helper = new S7ComunicationHelper(item.S7);
                             if (helper.Connect())
                             {
-                                s7Helpers[item.Name] = helper; // 使用设备名称作为键
+                                s7Helpers[item.DeviceId] = helper; // 使用设备名称作为键
                             }
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"设备 {item.Name} 连接失败: {ex.Message}");
+                            Console.WriteLine($"设备 {item.DeviceId} 连接失败: {ex.Message}");
                         }
                     }
                 }
@@ -66,9 +66,9 @@ namespace Zhaoxi.HostComputer.Base
 
                     foreach (var item in DeviceList)
                     {
-                        if (item.CommType == 2 && item.S7 != null && s7Helpers.ContainsKey(item.Name))
+                        if (item.CommType == 2 && item.S7 != null && s7Helpers.ContainsKey(item.DeviceId))
                         {
-                            var helper = s7Helpers[item.Name];
+                            var helper = s7Helpers[item.DeviceId];
 
                             try
                             {

@@ -20,7 +20,7 @@ namespace Zhaoxi.HostComputer
         {
             base.OnStartup(e);
 
-            //GlobalMonitor.Start();
+            GlobalMonitor.Start();
 
             if (new LoginWindow().ShowDialog() == true)
             {
@@ -31,7 +31,7 @@ namespace Zhaoxi.HostComputer
 
         protected override void OnExit(ExitEventArgs e)
         {
-            //GlobalMonitor.Stop();
+            GlobalMonitor.Stop();
             base.OnExit(e);
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -168,6 +168,129 @@ namespace Zhaoxi.HostComputer.DataAccess
         {
             string strSql = $"select * from monitor_values where d_id='{d_id}' order by v_id";
             return GetDatas(strSql);
+        }
+
+        /// <summary>
+        /// 保存Modbus协议配置
+        /// </summary>
+        /// <param name="d_id">设备ID</param>
+        /// <param name="ip">IP地址</param>
+        /// <param name="port">端口</param>
+        /// <param name="baudrate">波特率</param>
+        /// <param name="dataBit">数据位</param>
+        /// <param name="stop">停止位</param>
+        /// <param name="parity">校验位</param>
+        /// <param name="slaveId">从站号</param>
+        /// <param name="commMode">通信方式(0:串口,1:网口)</param>
+        /// <returns></returns>
+        public bool SaveModbusConfig(string d_id, string ip, int port, int baudrate, int dataBit, int stop, int parity, string slaveId, int commMode)
+        {
+            try
+            {
+                if (DBConnection())
+                {
+                    // 先检查是否存在该设备的配置
+                    string checkSql = "SELECT COUNT(*) FROM P_Modbus WHERE d_id=@d_id";
+                    Comm = new SqlCommand(checkSql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    int count = (int)Comm.ExecuteScalar();
+
+                    string sql = string.Empty;
+                    if (count > 0)
+                    {
+                        // 更新
+                        sql = @"UPDATE P_Modbus SET d_ip=@d_ip, d_port=@d_port, baudrate=@baudrate, 
+                                data_bit=@data_bit, stop=@stop, parity=@parity, slave_id=@slave_id, comm_mode=@comm_mode 
+                                WHERE d_id=@d_id";
+                    }
+                    else
+                    {
+                        // 插入
+                        sql = @"INSERT INTO P_Modbus (p_id, d_id, d_ip, d_port, baudrate, data_bit, stop, parity, slave_id, comm_mode) 
+                                VALUES (NEWID(), @d_id, @d_ip, @d_port, @baudrate, @data_bit, @stop, @parity, @slave_id, @comm_mode)";
+                    }
+
+                    Comm = new SqlCommand(sql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    Comm.Parameters.Add(new SqlParameter("@d_ip", SqlDbType.VarChar) { Value = ip });
+                    Comm.Parameters.Add(new SqlParameter("@d_port", SqlDbType.Int) { Value = port });
+                    Comm.Parameters.Add(new SqlParameter("@baudrate", SqlDbType.Int) { Value = baudrate });
+                    Comm.Parameters.Add(new SqlParameter("@data_bit", SqlDbType.Int) { Value = dataBit });
+                    Comm.Parameters.Add(new SqlParameter("@stop", SqlDbType.Int) { Value = stop });
+                    Comm.Parameters.Add(new SqlParameter("@parity", SqlDbType.Int) { Value = parity });
+                    Comm.Parameters.Add(new SqlParameter("@slave_id", SqlDbType.NChar) { Value = slaveId });
+                    Comm.Parameters.Add(new SqlParameter("@comm_mode", SqlDbType.Int) { Value = commMode });
+
+                    int result = Comm.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 保存S7协议配置
+        /// </summary>
+        /// <param name="d_id">设备ID</param>
+        /// <param name="ip">IP地址</param>
+        /// <param name="port">端口</param>
+        /// <param name="rock">机架号</param>
+        /// <param name="slot">插槽号</param>
+        /// <returns></returns>
+        public bool SaveS7Config(string d_id, string ip, int port, int rock, int slot)
+        {
+            try
+            {
+                if (DBConnection())
+                {
+                    // 先检查是否存在该设备的配置
+                    string checkSql = "SELECT COUNT(*) FROM P_S7 WHERE d_id=@d_id";
+                    Comm = new SqlCommand(checkSql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    int count = (int)Comm.ExecuteScalar();
+
+                    string sql = string.Empty;
+                    if (count > 0)
+                    {
+                        // 更新
+                        sql = @"UPDATE P_S7 SET d_ip=@d_ip, d_port=@d_port, d_rock=@d_rock, d_slot=@d_slot 
+                                WHERE d_id=@d_id";
+                    }
+                    else
+                    {
+                        // 插入
+                        sql = @"INSERT INTO P_S7 (p_id, d_id, d_ip, d_port, d_rock, d_slot) 
+                                VALUES (NEWID(), @d_id, @d_ip, @d_port, @d_rock, @d_slot)";
+                    }
+
+                    Comm = new SqlCommand(sql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    Comm.Parameters.Add(new SqlParameter("@d_ip", SqlDbType.VarChar) { Value = ip });
+                    Comm.Parameters.Add(new SqlParameter("@d_port", SqlDbType.Int) { Value = port });
+                    Comm.Parameters.Add(new SqlParameter("@d_rock", SqlDbType.Int) { Value = rock });
+                    Comm.Parameters.Add(new SqlParameter("@d_slot", SqlDbType.Int) { Value = slot });
+
+                    int result = Comm.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            return false;
         }
     }
 }

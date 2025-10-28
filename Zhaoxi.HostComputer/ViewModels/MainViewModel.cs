@@ -68,7 +68,7 @@ namespace Zhaoxi.HostComputer.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            GlobalMonitor.Start();
+          
 
             this.NavPage("Zhaoxi.HostComputer.Views.MonitorView");
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -28,6 +28,16 @@ namespace Zhaoxi.HostComputer.Models
                 }
                 return _editCommand;
             }
+        }
+
+        private string _deviceId;
+        /// <summary>
+        /// 设备ID
+        /// </summary>
+        public string DeviceId
+        {
+            get { return _deviceId; }
+            set { _deviceId = value; this.NotifyChanged(); }
         }
 
 
