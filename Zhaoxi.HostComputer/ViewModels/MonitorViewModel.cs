@@ -30,6 +30,20 @@ namespace Zhaoxi.HostComputer.ViewModels
             set { _timeLabels = value; NotifyChanged(); }
         }
 
+        // 当前选中的设备
+        private DeviceModel _selectedDevice;
+        public DeviceModel SelectedDevice
+        {
+            get { return _selectedDevice; }
+            set
+            {
+                _selectedDevice = value;
+                NotifyChanged();
+                // 切换设备时重置折线图数据
+                ResetChartData();
+            }
+        }
+
         private DispatcherTimer _chartUpdateTimer;
         private const int MAX_POINTS = 6; // 1分钟,10秒一个点,共6个点
         private const int UPDATE_INTERVAL = 10; // 10秒更新一次
@@ -44,6 +58,12 @@ namespace Zhaoxi.HostComputer.ViewModels
 
             // 初始化折线图数据
             InitializeChartData();
+
+            // 默认选中第一个设备
+            if (GlobalMonitor.DeviceList.Count > 0)
+            {
+                SelectedDevice = GlobalMonitor.DeviceList[0];
+            }
 
             // 启动定时器
             StartChartUpdateTimer();
@@ -79,54 +99,50 @@ namespace Zhaoxi.HostComputer.ViewModels
         {
             try
             {
-                // 从GlobalMonitor获取第一个设备的监控数据
-                if (GlobalMonitor.DeviceList.Count > 0)
+                // 从当前选中的设备获取监控数据
+                if (SelectedDevice != null && SelectedDevice.MonitorValueList != null && SelectedDevice.MonitorValueList.Count >= 4)
                 {
-                    var device = GlobalMonitor.DeviceList[0];
-                    if (device.MonitorValueList != null && device.MonitorValueList.Count >= 4)
+                    // 获取电压、电流、温度、负荷的值
+                    double voltage = 0;
+                    double current = 0;
+                    double temperature = 0;
+                    double load = 0;
+
+                    foreach (var monitor in SelectedDevice.MonitorValueList)
                     {
-                        // 获取电压、电流、温度、负荷的值
-                        double voltage = 0;
-                        double current = 0;
-                        double temperature = 0;
-                        double load = 0;
-
-                        foreach (var monitor in device.MonitorValueList)
+                        if (monitor.ValueName == "电压" && monitor.Value != null)
                         {
-                            if (monitor.ValueName == "电压" && monitor.Value != null)
-                            {
-                                voltage = Convert.ToDouble(monitor.Value);
-                            }
-                            else if (monitor.ValueName == "电流" && monitor.Value != null)
-                            {
-                                current = Convert.ToDouble(monitor.Value);
-                            }
-                            else if (monitor.ValueName == "温度" && monitor.Value != null)
-                            {
-                                temperature = Convert.ToDouble(monitor.Value);
-                            }
-                            else if (monitor.ValueName == "负荷" && monitor.Value != null)
-                            {
-                                load = Convert.ToDouble(monitor.Value);
-                            }
+                            voltage = Convert.ToDouble(monitor.Value);
                         }
-
-                        // 移除最旧的数据点,添加新数据
-                        VoltageValues.RemoveAt(0);
-                        VoltageValues.Add(voltage);
-
-                        CurrentValues.RemoveAt(0);
-                        CurrentValues.Add(current);
-
-                        LoadValues.RemoveAt(0);
-                        LoadValues.Add(load);
-
-                        TemperatureValues.RemoveAt(0);
-                        TemperatureValues.Add(temperature);
-
-                        // 更新时间标签
-                        UpdateTimeLabels();
+                        else if (monitor.ValueName == "电流" && monitor.Value != null)
+                        {
+                            current = Convert.ToDouble(monitor.Value);
+                        }
+                        else if (monitor.ValueName == "温度" && monitor.Value != null)
+                        {
+                            temperature = Convert.ToDouble(monitor.Value);
+                        }
+                        else if (monitor.ValueName == "负荷" && monitor.Value != null)
+                        {
+                            load = Convert.ToDouble(monitor.Value);
+                        }
                     }
+
+                    // 移除最旧的数据点,添加新数据
+                    VoltageValues.RemoveAt(0);
+                    VoltageValues.Add(voltage);
+
+                    CurrentValues.RemoveAt(0);
+                    CurrentValues.Add(current);
+
+                    LoadValues.RemoveAt(0);
+                    LoadValues.Add(load);
+
+                    TemperatureValues.RemoveAt(0);
+                    TemperatureValues.Add(temperature);
+
+                    // 更新时间标签
+                    UpdateTimeLabels();
                 }
             }
             catch (Exception ex)
@@ -148,6 +164,34 @@ namespace Zhaoxi.HostComputer.ViewModels
             }
             
             TimeLabels = newLabels;
+        }
+
+        /// <summary>
+        /// 重置折线图数据(切换设备时调用)
+        /// </summary>
+        private void ResetChartData()
+        {
+            // 清空所有数据
+            VoltageValues.Clear();
+            CurrentValues.Clear();
+            LoadValues.Clear();
+            TemperatureValues.Clear();
+
+            // 重新初始化0值
+            for (int i = 0; i < MAX_POINTS; i++)
+            {
+                VoltageValues.Add(0);
+                CurrentValues.Add(0);
+                LoadValues.Add(0);
+                TemperatureValues.Add(0);
+            }
+
+            // 重置时间标签
+            TimeLabels = new string[MAX_POINTS];
+            for (int i = 0; i < MAX_POINTS; i++)
+            {
+                TimeLabels[i] = "--:--";
+            }
         }
 
         public void Dispose()

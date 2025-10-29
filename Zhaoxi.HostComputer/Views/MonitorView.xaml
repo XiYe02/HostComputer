@@ -191,7 +191,14 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="参数分析" FontWeight="Bold" Foreground="#555" VerticalAlignment="Center" Margin="5,0"/>
+                <Grid>
+                    <TextBlock Text="参数分析" FontWeight="Bold" Foreground="#555" VerticalAlignment="Center" Margin="5,0" HorizontalAlignment="Left"/>
+                    <ComboBox Width="150" Height="28" HorizontalAlignment="Right" Margin="5,0"
+                              ItemsSource="{Binding Path=(base:GlobalMonitor.DeviceList)}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              DisplayMemberPath="Name"
+                              xmlns:base="clr-namespace:Zhaoxi.HostComputer.Base"/>
+                </Grid>
                 <Border Background="White" Grid.Row="1" CornerRadius="5" Margin="5">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="0" BlurRadius="3" Opacity="0.1"/>
