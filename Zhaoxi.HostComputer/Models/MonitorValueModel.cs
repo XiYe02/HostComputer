@@ -11,6 +11,7 @@ namespace Zhaoxi.HostComputer.Models
     //需要设置的报警信息
     public class MonitorValueModel : NotifyBase
     {
+        public int Index { get; set; }
         public string ValueId { get; set; }
         public string ValueName { get; set; }
         public string Address { get; set; }

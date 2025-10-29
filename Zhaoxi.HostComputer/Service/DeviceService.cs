@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -61,14 +61,19 @@ namespace Zhaoxi.HostComputer.Service
                 if (v_info != null && v_info.AsEnumerable().Count() > 0)
                 {
                     //将点位信息封装成MonitorValueModel对象
-                    List<MonitorValueModel> vList = (from q in v_info.AsEnumerable()
-                                                     select new MonitorValueModel
-                                                     {
-                                                         ValueName = q.Field<string>("tag_name"),
-                                                         Address = q.Field<string>("address"),
-                                                         DataType = q.Field<string>("data_type"),
-                                                         Unit = q.Field<string>("unit")
-                                                     }).ToList();
+                    List<MonitorValueModel> vList = new List<MonitorValueModel>();
+                    int index = 1;
+                    foreach (var q in v_info.AsEnumerable())
+                    {
+                        vList.Add(new MonitorValueModel
+                        {
+                            Index = index++,
+                            ValueName = q.Field<string>("tag_name"),
+                            Address = q.Field<string>("address"),
+                            DataType = q.Field<string>("data_type"),
+                            Unit = q.Field<string>("unit")
+                        });
+                    }
                     deviceModel.MonitorValueList = new System.Collections.ObjectModel.ObservableCollection<MonitorValueModel>(vList);
                 }
 

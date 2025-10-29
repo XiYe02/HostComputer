@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -52,6 +52,9 @@ namespace Zhaoxi.HostComputer.Views
                     return;
 
                 SqlServerAccess sqlAccess = new SqlServerAccess();
+
+                // 加载监控点位数据
+                LoadMonitorValues();
 
                 // 根据通信类型加载不同的配置
                 if (_deviceModel.CommType == 2) // S7协议
@@ -116,6 +119,45 @@ namespace Zhaoxi.HostComputer.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"加载配置失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 加载监控点位数据
+        /// </summary>
+        private void LoadMonitorValues()
+        {
+            try
+            {
+                if (_deviceModel == null || string.IsNullOrEmpty(_deviceModel.DeviceId))
+                    return;
+
+                SqlServerAccess sqlAccess = new SqlServerAccess();
+                var dt = sqlAccess.GetMonitorValues(_deviceModel.DeviceId);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    _deviceModel.MonitorValueList.Clear();
+                    int index = 1;
+                    foreach (System.Data.DataRow row in dt.Rows)
+                    {
+                        var monitorValue = new MonitorValueModel
+                        {
+                            Index = index,
+                            ValueId = row["v_id"].ToString(),
+                            ValueName = row["tag_name"].ToString(),
+                            Address = row["address"].ToString(),
+                            DataType = row["data_type"].ToString(),
+                            Unit = row["unit"].ToString()
+                        };
+                        _deviceModel.MonitorValueList.Add(monitorValue);
+                        index++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载监控点位失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -270,6 +312,98 @@ namespace Zhaoxi.HostComputer.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// 添加监控点位
+        /// </summary>
+        private void AddMonitorValue_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_deviceModel == null || string.IsNullOrEmpty(_deviceModel.DeviceId))
+                {
+                    MessageBox.Show("请先选择设备！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var editWindow = new MonitorValueEditWindow(_deviceModel.DeviceId);
+                editWindow.Owner = this;
+                if (editWindow.ShowDialog() == true)
+                {
+                    // 重新加载监控点位数据
+                    LoadMonitorValues();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"添加失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 编辑监控点位
+        /// </summary>
+        private void EditMonitorValue_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // 获取数据上下文
+                var hyperlink = sender as Hyperlink;
+                //将控件的DataContext赋值给monitorValue
+                if (hyperlink?.DataContext is MonitorValueModel monitorValue)
+                {
+                    var editWindow = new MonitorValueEditWindow(_deviceModel.DeviceId, monitorValue);
+                    editWindow.Owner = this;
+                    if (editWindow.ShowDialog() == true)
+                    {
+                        // 重新加载监控点位数据
+                        LoadMonitorValues();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"编辑失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 删除监控点位
+        /// </summary>
+        private void DeleteMonitorValue_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // 获取数据上下文
+                var hyperlink = sender as Hyperlink;
+                if (hyperlink?.DataContext is MonitorValueModel monitorValue)
+                {
+                    var result = MessageBox.Show($"确定要删除监控点位 \"{monitorValue.ValueName}\" 吗？", 
+                        "确认删除", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        SqlServerAccess sqlAccess = new SqlServerAccess();
+                        bool success = sqlAccess.DeleteMonitorValue(_deviceModel.DeviceId, monitorValue.ValueId);
+                        
+                        if (success)
+                        {
+                            MessageBox.Show("删除成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                            // 重新加载监控点位数据
+                            LoadMonitorValues();
+                        }
+                        else
+                        {
+                            MessageBox.Show("删除失败！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"删除失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

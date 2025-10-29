@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Zhaoxi.HostComputer.Views"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d" UseLayoutRounding="True"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterOwner" Background="Transparent"
@@ -55,16 +54,6 @@
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
-
-                    <x:Array Type="sys:String" x:Key="datas">
-                        <sys:String>1</sys:String>
-                        <sys:String>2</sys:String>
-                        <sys:String>3</sys:String>
-                        <sys:String>4</sys:String>
-                        <sys:String>5</sys:String>
-                        <sys:String>6</sys:String>
-                        <sys:String>7</sys:String>
-                    </x:Array>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -209,36 +198,38 @@
                             <TextBlock Text="数据类型" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4"/>
                             <TextBlock Text="操作" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="5"/>
                         </Grid>
-                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Source={StaticResource datas}}" Margin="10,0">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Background="Transparent" Height="30">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="45"/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="80"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="100"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="电源电压" Grid.Column="1" VerticalAlignment="Center" />
-                                        <TextBlock Text="VW100" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="kv" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="ushort" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding MonitorValueList}" Margin="10,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="Transparent" Height="30">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="45"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="100"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Index}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding ValueName}" Grid.Column="1" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Address}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Unit}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DataType}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                                        <TextBlock Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Hyperlink>编辑</Hyperlink>
-                                    <Hyperlink>删除</Hyperlink>
-                                        </TextBlock>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                            <TextBlock Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Hyperlink Click="EditMonitorValue_Click">编辑</Hyperlink>
+                                        <Hyperlink Click="DeleteMonitorValue_Click">删除</Hyperlink>
+                                            </TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
 
-                        <Button Content="添加点位配置" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"
+                        <Button Content="添加点位配置" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"
                     Height="28" Width="120" Background="#FF3269DE"
-                    Template="{StaticResource AddButtonTemplate}"/>
+                    Template="{StaticResource AddButtonTemplate}" Click="AddMonitorValue_Click"/>
                     </Grid>
 
                 </TabItem>

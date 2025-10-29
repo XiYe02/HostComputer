@@ -292,5 +292,127 @@ namespace Zhaoxi.HostComputer.DataAccess
             }
             return false;
         }
+
+        /// <summary>
+        /// 添加监控点位
+        /// </summary>
+        /// <param name="d_id">设备ID</param>
+        /// <param name="tag_name">标签名</param>
+        /// <param name="address">地址</param>
+        /// <param name="data_type">数据类型</param>
+        /// <param name="unit">单位</param>
+        /// <returns></returns>
+        public bool AddMonitorValue(string d_id, string tag_name, string address, string data_type, string unit)
+        {
+            try
+            {
+                if (DBConnection())
+                {
+                    // 获取当前设备下的最大v_id
+                    string maxSql = "SELECT ISNULL(MAX(v_id), 0) FROM monitor_values WHERE d_id=@d_id";
+                    Comm = new SqlCommand(maxSql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    int maxVid = (int)Comm.ExecuteScalar();
+                    int newVid = maxVid + 1;
+
+                    // 插入新记录
+                    string sql = @"INSERT INTO monitor_values (d_id, v_id, tag_name, address, data_type, unit) 
+                                   VALUES (@d_id, @v_id, @tag_name, @address, @data_type, @unit)";
+                    Comm = new SqlCommand(sql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    Comm.Parameters.Add(new SqlParameter("@v_id", SqlDbType.Int) { Value = newVid });
+                    Comm.Parameters.Add(new SqlParameter("@tag_name", SqlDbType.VarChar) { Value = tag_name });
+                    Comm.Parameters.Add(new SqlParameter("@address", SqlDbType.VarChar) { Value = address });
+                    Comm.Parameters.Add(new SqlParameter("@data_type", SqlDbType.VarChar) { Value = data_type });
+                    Comm.Parameters.Add(new SqlParameter("@unit", SqlDbType.VarChar) { Value = unit });
+
+                    int result = Comm.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 更新监控点位
+        /// </summary>
+        /// <param name="d_id">设备ID</param>
+        /// <param name="v_id">点位ID</param>
+        /// <param name="tag_name">标签名</param>
+        /// <param name="address">地址</param>
+        /// <param name="data_type">数据类型</param>
+        /// <param name="unit">单位</param>
+        /// <returns></returns>
+        public bool UpdateMonitorValue(string d_id, string v_id, string tag_name, string address, string data_type, string unit)
+        {
+            try
+            {
+                if (DBConnection())
+                {
+                    string sql = @"UPDATE monitor_values SET tag_name=@tag_name, address=@address, 
+                                   data_type=@data_type, unit=@unit 
+                                   WHERE d_id=@d_id AND v_id=@v_id";
+                    Comm = new SqlCommand(sql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    Comm.Parameters.Add(new SqlParameter("@v_id", SqlDbType.Int) { Value = int.Parse(v_id) });
+                    Comm.Parameters.Add(new SqlParameter("@tag_name", SqlDbType.VarChar) { Value = tag_name });
+                    Comm.Parameters.Add(new SqlParameter("@address", SqlDbType.VarChar) { Value = address });
+                    Comm.Parameters.Add(new SqlParameter("@data_type", SqlDbType.VarChar) { Value = data_type });
+                    Comm.Parameters.Add(new SqlParameter("@unit", SqlDbType.VarChar) { Value = unit });
+
+                    int result = Comm.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 删除监控点位
+        /// </summary>
+        /// <param name="d_id">设备ID</param>
+        /// <param name="v_id">点位ID</param>
+        /// <returns></returns>
+        public bool DeleteMonitorValue(string d_id, string v_id)
+        {
+            try
+            {
+                if (DBConnection())
+                {
+                    string sql = "DELETE FROM monitor_values WHERE d_id=@d_id AND v_id=@v_id";
+                    Comm = new SqlCommand(sql, Conn);
+                    Comm.Parameters.Add(new SqlParameter("@d_id", SqlDbType.VarChar) { Value = d_id });
+                    Comm.Parameters.Add(new SqlParameter("@v_id", SqlDbType.Int) { Value = int.Parse(v_id) });
+
+                    int result = Comm.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            return false;
+        }
     }
 }
