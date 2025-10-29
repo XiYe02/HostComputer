@@ -11,7 +11,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/10/2025 12:29:59
+ Date: 29/10/2025 13:07:56
 */
 
 
@@ -43,7 +43,7 @@ GO
 -- ----------------------------
 -- Records of P_Modbus
 -- ----------------------------
-INSERT INTO [dbo].[P_Modbus] ([p_id], [d_id], [d_ip], [d_port], [baudrate], [data_bit], [stop], [parity], [slave_id], [comm_mode]) VALUES (N'1', N'1001', N'192.168.31.11', N'102', N'9600', N'8', N'1', N'0', N'1         ', N'1')
+INSERT INTO [dbo].[P_Modbus] ([p_id], [d_id], [d_ip], [d_port], [baudrate], [data_bit], [stop], [parity], [slave_id], [comm_mode]) VALUES (N'1', N'1001', N'192.168.31.11', N'102', N'9600', N'8', N'1', N'0', N'2         ', N'0')
 GO
 
 

@@ -11,7 +11,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/10/2025 12:29:51
+ Date: 29/10/2025 13:07:48
 */
 
 
@@ -39,10 +39,43 @@ GO
 -- ----------------------------
 -- Records of monitor_values
 -- ----------------------------
-INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001001', N'电压', N'VW100', N'ushort', N'kv')
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001001', N'电压', N'DB2.DBW0', N'ushort', N'kvv')
 GO
 
-INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001002', N'电流', N'VW102', N'ushort', N'A')
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001002', N'电流', N'DB2.DBW2', N'ushort', N'A')
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001003', N'温度', N'DB2.DBW4', N'ushort', N'C')
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1001', N'1001004', N'负荷', N'DB2.DBW22', N'ushort', N'')
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1002', N'1002001', N'电压', N'DB2.DBW6', N'ushort', NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1002', N'1002002', N'电流', N'DB2.DBW8', N'ushort', NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1002', N'1002003', N'温度', N'DB2.DBW10', N'ushort', NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1003', N'1003001', N'电压', N'DB2.DBW12', NULL, NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1003', N'1003002', N'电流', N'DB2.DBW14', NULL, NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1003', N'1003003', N'温度', N'DB2.DBW16', NULL, NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1004', N'1004001', N'电压', N'DB2.DBW18', NULL, NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1004', N'1004002', N'温度', N'DB2.DBW20', NULL, NULL)
+GO
+
+INSERT INTO [dbo].[monitor_values] ([d_id], [v_id], [tag_name], [address], [data_type], [unit]) VALUES (N'1004', N'1004003', N'电压', N'DB2.DBW22', NULL, NULL)
 GO
 
 

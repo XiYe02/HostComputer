@@ -206,7 +206,7 @@
                         <TextBlock Text="[电压]" VerticalAlignment="Top"/>
                         <lvc:CartesianChart Grid.Row="1">
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Stroke="#FF7261" PointGeometrySize="0" Values="156,600,70,760,320,540,880,340,500">
+                                <lvc:LineSeries Stroke="#FF7261" PointGeometrySize="0" Values="{Binding VoltageValues}">
                                     <lvc:LineSeries.Fill>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="#FFE3E0" Offset="0"/>
@@ -216,7 +216,7 @@
                                 </lvc:LineSeries>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis ShowLabels="True" Labels="1:00,2:00,3:00,4:00,5:00,6:00,7:00,8:00,9:00" 
+                                <lvc:Axis ShowLabels="True" Labels="{Binding TimeLabels}" 
                                           LabelsRotation="0" FontSize="8">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator Step="1" StrokeThickness="0"/>
@@ -242,7 +242,7 @@
                         <lvc:CartesianChart Grid.Row="1">
                             <lvc:CartesianChart.Series>
                                 <lvc:LineSeries Stroke="#FECC71"
-                                                    PointGeometrySize="0" Values="156,600,70,760,320,540,880,340,500">
+                                                    PointGeometrySize="0" Values="{Binding CurrentValues}">
                                     <lvc:LineSeries.Fill>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="#FFF2DE" Offset="0"/>
@@ -252,7 +252,7 @@
                                 </lvc:LineSeries>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis ShowLabels="True" Labels="1:00,2:00,3:00,4:00,5:00,6:00,7:00,8:00,9:00" 
+                                <lvc:Axis ShowLabels="True" Labels="{Binding TimeLabels}" 
                                           LabelsRotation="0" FontSize="8">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator Step="1" StrokeThickness="0"/>
@@ -277,7 +277,7 @@
                         <TextBlock Text="[负荷]" VerticalAlignment="Top"/>
                         <lvc:CartesianChart Grid.Row="1">
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Stroke="#5CD0E1" PointGeometrySize="0" Values="560,160,70,176,302,154,808,340,500">
+                                <lvc:LineSeries Stroke="#5CD0E1" PointGeometrySize="0" Values="{Binding LoadValues}">
                                     <lvc:LineSeries.Fill>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="#DBF3F9" Offset="0"/>
@@ -287,7 +287,7 @@
                                 </lvc:LineSeries>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis ShowLabels="True" Labels="1:00,2:00,3:00,4:00,5:00,6:00,7:00,8:00,9:00" 
+                                <lvc:Axis ShowLabels="True" Labels="{Binding TimeLabels}" 
                                           LabelsRotation="0" FontSize="8">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator Step="1" StrokeThickness="0"/>
@@ -312,7 +312,7 @@
                         <TextBlock Text="[温度]" VerticalAlignment="Top"/>
                         <lvc:CartesianChart Grid.Row="1">
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Stroke="#7ADA95" PointGeometrySize="0" Values="220,300,100,500,800,400,270,600,560">
+                                <lvc:LineSeries Stroke="#7ADA95" PointGeometrySize="0" Values="{Binding TemperatureValues}">
                                     <lvc:LineSeries.Fill>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                             <GradientStop Color="#EDFAF0" Offset="0"/>
@@ -322,7 +322,7 @@
                                 </lvc:LineSeries>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis ShowLabels="True" Labels="1:00,2:00,3:00,4:00,5:00,6:00,7:00,8:00,9:00" 
+                                <lvc:Axis ShowLabels="True" Labels="{Binding TimeLabels}" 
                                           LabelsRotation="0" FontSize="8">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator Step="1" StrokeThickness="0"/>

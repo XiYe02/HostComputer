@@ -11,7 +11,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/10/2025 12:30:07
+ Date: 29/10/2025 13:08:03
 */
 
 
@@ -39,7 +39,16 @@ GO
 -- ----------------------------
 -- Records of P_S7
 -- ----------------------------
-INSERT INTO [dbo].[P_S7] ([p_id], [d_id], [d_ip], [d_port], [d_rock], [d_slot]) VALUES (N'1', N'1001', N'192.168.2.1', N'102', N'0', N'1')
+INSERT INTO [dbo].[P_S7] ([p_id], [d_id], [d_ip], [d_port], [d_rock], [d_slot]) VALUES (N'1', N'1001', N'192.168.31.11', N'102', N'0', N'1')
+GO
+
+INSERT INTO [dbo].[P_S7] ([p_id], [d_id], [d_ip], [d_port], [d_rock], [d_slot]) VALUES (N'2', N'1002', N'192.168.31.11', N'103', N'0', N'1')
+GO
+
+INSERT INTO [dbo].[P_S7] ([p_id], [d_id], [d_ip], [d_port], [d_rock], [d_slot]) VALUES (N'3', N'1003', N'192.168.31.11', N'102', N'0', N'1')
+GO
+
+INSERT INTO [dbo].[P_S7] ([p_id], [d_id], [d_ip], [d_port], [d_rock], [d_slot]) VALUES (N'4', N'1004', N'192.168.31.11', N'102', N'0', N'1')
 GO
 
 
